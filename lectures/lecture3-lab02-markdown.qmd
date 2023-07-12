@@ -6,11 +6,66 @@ editor: visual
 
 # Part 1
 
-## Imports
+### Imports
 
-Import tidyverse and xml2 library
+Import tidyverse and the xml2 library
 
 ``` r
+#### PART 1: Setup ####
+
 library(tidyverse)
 library(xml2)
 ```
+
+### Data Input
+
+``` r
+# When stored in the working directory, the data file can be loaded in as such:
+df <- read_csv("Dec_lsoa_grocery.csv")
+```
+
+# Part 2
+
+### In case you want too look at the data
+
+``` r
+# select the relevant columns 
+selected_columns <- c("area_id",
+                      "fat", "saturate", "salt", "protein", "sugar", "carb",
+                      "fibre", "alcohol")
+
+view(df[selected_columns])
+```
+
+### Initialize an empty XML document with the `xml_new_root()` function
+
+``` r
+#### Part 2: Working with XML ####
+
+# The xml2 library is already loaded in
+
+# specifying the encoding is optional but recommended
+tesco_row1_xml <- xml_new_root("data", .encoding = "UTF-8")
+```
+
+### Create a new XML node for each row of data
+Here it is initially done for just the first row.
+
+``` r
+# Extract the first row from the dataframe
+row1 <- df %>% slice(1)
+
+# Create an XML node for the area of the first row
+area_node <- xml_new_root("area",
+                          area_id = row1 %>% pull(area_id)
+                          )
+```
+
+::: callout-note
+Note that the `area_id` attribute is not a child node, but an **attribute** of the area node. The tag `area` has no children (yet) and for that reason, the xml2 package automatically closes it with a `/` at the end: `<area ... />` (for now).
+:::
+
+### We now want to create an XML node for each of the nutrients and add them as ´children´ of the area node
+
+Here we use a for loop to iterate over the nutrient names 
+
