@@ -1,0 +1,16 @@
+---
+title: "ME204 - Week 1 - D03 - lecture"
+format: html
+editor: visual
+---
+
+# Part 1
+
+## Imports
+
+Import tidyverse and xml2 library
+
+``` r
+library(tidyverse)
+library(xml2)
+```
